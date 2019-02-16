@@ -27,6 +27,7 @@ class DecoderRNN(nn.Module):
     1. https://github.com/sunsided/image-captioning/blob/develop/model.py
     2. https://github.com/vmelan/CVND-udacity/blob/master/P2_Image_Captioning/model.py
     3. https://github.com/sgrvinod/a-PyTorch-Tutorial-to-Image-Captioning/blob/master/caption.py
+    4. https://machinelearningmastery.com/beam-search-decoder-natural-language-processing/
     '''
     def __init__(self, embed_size, hidden_size, vocab_size, num_layers=1, dropout=0):
         super(DecoderRNN, self).__init__()
@@ -187,7 +188,7 @@ class DecoderRNN(nn.Module):
         # hidden -> (num_layers, batch_size=1, hidden_size) for current time step
 
         preds = self.fc(lstm_out) # (1, 1, vocab_size)
-        scores = F.log_softmax(preds, dim=2)
+        scores = F.log_softmax(preds, dim=2) # taking log to avoid small values due to multiple multiplications
         top_scores, top_ids = scores.topk(k, dim=2, largest=True, sorted=True) # both shape (1,1,k)
 
         # treat the beam search sequences as batch_size k

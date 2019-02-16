@@ -76,7 +76,7 @@ class Vocabulary(object):
         for i, id in enumerate(ids):
             caption = str(coco.anns[id]['caption'])
             tokens = nltk.tokenize.word_tokenize(caption.lower())
-            counter.update(tokens)
+            counter.update(tokens) # add in new count of token
 
             if i % 100000 == 0:
                 print("[%d/%d] Tokenizing captions..." % (i, len(ids)))

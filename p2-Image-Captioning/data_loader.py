@@ -99,7 +99,7 @@ class CoCoDataset(data.Dataset):
             self.ids = list(self.coco.anns.keys())
             print('Obtaining caption lengths...')
             all_tokens = [nltk.tokenize.word_tokenize(str(self.coco.anns[self.ids[index]]['caption']).lower()) for index in tqdm(np.arange(len(self.ids)))]
-            self.caption_lengths = [len(token) for token in all_tokens]
+            self.caption_lengths = [len(token) for token in all_tokens] # each element in all_tokens a list of tokenzied caption
         else:
             test_info = json.loads(open(annotations_file).read())
             self.paths = [item['file_name'] for item in test_info['images']]
@@ -140,7 +140,8 @@ class CoCoDataset(data.Dataset):
             return orig_image, image
 
     def get_train_indices(self):
-        sel_length = np.random.choice(self.caption_lengths)
+        sel_length = np.random.choice(self.caption_lengths) # first decide the length of different caption length
+        # then pull out the captions with the specified length
         all_indices = np.where([self.caption_lengths[i] == sel_length for i in np.arange(len(self.caption_lengths))])[0]
         indices = list(np.random.choice(all_indices, size=self.batch_size))
         return indices
